@@ -44,6 +44,8 @@ class PomMenuController: NSObject {
     var running = true
     
     @IBAction func quitClicked(sender: NSMenuItem) {
+        let mins = pom!.pause()
+        updateLog("end", state!.string(), String(state!.value() - mins))
         updateLog("quit")
         NSApplication.sharedApplication().terminate(self);
     }
@@ -52,6 +54,7 @@ class PomMenuController: NSObject {
         let mins = pom!.pause()
         updateLog("end", state!.string(), String(state!.value() - mins))
         state = State.Task
+        updateLog("begin", state!.string())
         pom?.start(mins: state!.value())
     }
     
@@ -59,6 +62,7 @@ class PomMenuController: NSObject {
         let mins = pom!.pause()
         updateLog("end", state!.string(), String(state!.value() - mins))
         state = State.Break
+        updateLog("begin", state!.string())
         pom?.start(mins: state!.value())
     }
     
