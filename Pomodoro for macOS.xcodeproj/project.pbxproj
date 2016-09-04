@@ -12,6 +12,7 @@
 		697C78C61D7B35770030B0D6 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 697C78C41D7B35770030B0D6 /* MainMenu.xib */; };
 		697C78D11D7B35780030B0D6 /* Pomodoro_for_macOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 697C78D01D7B35780030B0D6 /* Pomodoro_for_macOSTests.swift */; };
 		697C78DC1D7B35780030B0D6 /* Pomodoro_for_macOSUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 697C78DB1D7B35780030B0D6 /* Pomodoro_for_macOSUITests.swift */; };
+		69C3F9FB1D7B48FE009CD83F /* PomMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69C3F9FA1D7B48FE009CD83F /* PomMenuController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +44,7 @@
 		697C78D71D7B35780030B0D6 /* Pomodoro for macOSUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Pomodoro for macOSUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		697C78DB1D7B35780030B0D6 /* Pomodoro_for_macOSUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pomodoro_for_macOSUITests.swift; sourceTree = "<group>"; };
 		697C78DD1D7B35780030B0D6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		69C3F9FA1D7B48FE009CD83F /* PomMenuController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PomMenuController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +98,7 @@
 				697C78C01D7B35770030B0D6 /* AppDelegate.swift */,
 				697C78C21D7B35770030B0D6 /* Assets.xcassets */,
 				697C78C41D7B35770030B0D6 /* MainMenu.xib */,
+				69C3F9FA1D7B48FE009CD83F /* PomMenuController.swift */,
 				697C78C71D7B35770030B0D6 /* Info.plist */,
 			);
 			path = "Pomodoro for macOS";
@@ -250,6 +253,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				697C78C11D7B35770030B0D6 /* AppDelegate.swift in Sources */,
+				69C3F9FB1D7B48FE009CD83F /* PomMenuController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -471,6 +475,7 @@
 				697C78E21D7B35780030B0D6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		697C78E31D7B35780030B0D6 /* Build configuration list for PBXNativeTarget "Pomodoro for macOSTests" */ = {
 			isa = XCConfigurationList;
@@ -479,6 +484,7 @@
 				697C78E51D7B35780030B0D6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		697C78E61D7B35780030B0D6 /* Build configuration list for PBXNativeTarget "Pomodoro for macOSUITests" */ = {
 			isa = XCConfigurationList;
@@ -487,6 +493,7 @@
 				697C78E81D7B35780030B0D6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
