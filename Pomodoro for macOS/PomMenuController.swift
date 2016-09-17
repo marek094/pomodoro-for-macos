@@ -12,25 +12,25 @@ import Foundation
 class PomMenuController: NSObject {
     
     enum State : Int {
-        case Break, Task
+        case `break`, task
         
         func next() -> State {
             switch self {
-            case .Break: return .Task
-            default: return .Break
+            case .break: return .task
+            default: return .break
             }
         }
         
         func string() -> String {
             switch self {
-            case .Break: return "B"
+            case .break: return "B"
             default: return "T"
             }
         }
         
         func value() -> Int {
             switch self {
-            case .Break: return 5
+            case .break: return 5
             default: return 25
             }
         }
@@ -38,35 +38,48 @@ class PomMenuController: NSObject {
     
     @IBOutlet weak var pomMenu: NSMenu!
     
-    let pomItem = NSStatusBar.systemStatusBar().statusItemWithLength(55)
-    var pom : Pomodoro?    
-    var state : State?
+    let pomItem = NSStatusBar.system().statusItem(withLength: 55)
+    let spotify: MusicControler = SpotifyControler()
+    var pom: Pomodoro?
+    var state: State? {
+        didSet {
+            let alert = NSAlert()
+            if state == .break {
+                spotify.play()
+            } else {
+                spotify.pause()
+            }
+            alert.runModal()
+        }
+    }
     var running = true
     
-    @IBAction func quitClicked(sender: NSMenuItem) {
+    @IBAction func quitClicked(_ sender: NSMenuItem) {
         let mins = pom!.pause()
         updateLog("end", state!.string(), String(state!.value() - mins))
         updateLog("quit")
-        NSApplication.sharedApplication().terminate(self);
+        NSApplication.shared().terminate(self);
     }
     
-    @IBAction func startTask(sender: NSMenuItem) {
+    @IBAction func startTask(_ sender: NSMenuItem) {
         let mins = pom!.pause()
         updateLog("end", state!.string(), String(state!.value() - mins))
-        state = State.Task
+        state = State.task
         updateLog("begin", state!.string())
         pom?.start(mins: state!.value())
+        running = true;
     }
     
-    @IBAction func startBreak(sender: NSMenuItem) {
+    @IBAction func startBreak(_ sender: NSMenuItem) {
         let mins = pom!.pause()
         updateLog("end", state!.string(), String(state!.value() - mins))
-        state = State.Break
+        state = State.break
         updateLog("begin", state!.string())
         pom?.start(mins: state!.value())
+        running = true;
     }
     
-    @IBAction func pause(sender: NSMenuItem) {
+    @IBAction func pause(_ sender: NSMenuItem) {
         if self.running {
             sender.title = "Continue"
             pom!.pause()
@@ -95,33 +108,33 @@ class PomMenuController: NSObject {
             updateLog("end", state.string(), String(state.value()))
             self.state = state.next()
         } else {
-            state = State.Task;
+            state = State.task;
         }
         pom!.start(mins: state!.value())
         updateLog("begin", state!.string())
     }
     
-    func updateTitle(secs: Int) {
+    func updateTitle(_ secs: Int) {
         let min = secs / 60
         let sec = secs % 60
-        func nul(sec : Int) -> String { return sec < 10 ? "0" : "" }
+        func nul(_ sec : Int) -> String { return sec < 10 ? "0" : "" }
         pomItem.title = (state?.string() ?? "") +
             "\(nul(min))\(min):\(nul(sec))\(sec)"
     }
 
-    func updateLog(text: String...) {
+    func updateLog(_ text: String...) {
         let path  = NSHomeDirectory() + "/.pomodoro.txt"
         
-        let formatter = NSDateFormatter()
+        let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-        let date = formatter.stringFromDate(NSDate())
+        let date = formatter.string(from: Date())
         
         let info = [date] + text
-        let line = info.joinWithSeparator("\t") + "\n"
+        let line = info.joined(separator: "\t") + "\n"
         
-        let os : NSOutputStream = NSOutputStream(toFileAtPath: path, append: true)!
+        let os : OutputStream = OutputStream(toFileAtPath: path, append: true)!
         os.open()
-        os.write(line, maxLength: line.lengthOfBytesUsingEncoding(NSUTF8StringEncoding))
+        os.write(line, maxLength: line.lengthOfBytes(using: String.Encoding.utf8))
         os.close()
     }
     
@@ -129,7 +142,7 @@ class PomMenuController: NSObject {
 
 class Pomodoro {
     let pomCtl : PomMenuController
-    var timer : NSTimer?
+    var timer : Timer?
     var secs = 0
     
     init(ctl pomCtl : PomMenuController) {
@@ -141,11 +154,11 @@ class Pomodoro {
         return Int(round(Float(secs) / 60.0))
     }
     
-    func start(mins mins : Int?) {
+    func start(mins : Int?) {
         if let mins = mins { secs = mins * 60 }
         timer?.invalidate()
-        timer = NSTimer.scheduledTimerWithTimeInterval(
-            1.0,
+        timer = Timer.scheduledTimer(
+            timeInterval: 1.0,
             target: self,
             selector: #selector(Pomodoro.timerFunc(_:)),
             userInfo: nil,
@@ -153,11 +166,38 @@ class Pomodoro {
         )
     }
     
-    @objc func timerFunc(timer : NSTimer) {
+    @objc func timerFunc(_ timer : Timer) {
         if secs <= 0 { pomCtl.updateState() }
         pomCtl.updateTitle(secs)
         secs -= 1;
     }
     
-    
 }
+
+
+
+protocol MusicControler {
+    func play()
+    func pause()
+}
+
+class SpotifyControler : MusicControler {
+    
+    private func run(command: String) -> Void {
+        let task = Process()
+        task.launchPath = "/usr/bin/osascript"
+        task.arguments = ["-e", "tell application \"Spotify\"", "-e", command, "-e", "end tell"]
+        task.launch()
+
+    }
+    
+    public func pause() { self.run(command: "pause") }
+    public func play() { self.run(command: "play") }
+}
+
+
+
+
+
+
+
